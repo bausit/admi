@@ -1,17 +1,24 @@
 package org.bausit.admin.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="ZYMUser_6")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long userRecordId;
+    @Column(name = "userRecordId")
+    private long id;
 
     @Column(name = "userEmailId")
     private String userEmailId;
