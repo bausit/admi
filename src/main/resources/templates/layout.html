@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html th:fragment="layout (title, content, links)" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:replace="${title}">BAUS IT: 法會以及夏令營活動</title>
+
+    <!-- Common styles and scripts -->
+
+    <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <link href="https://getbootstrap.com/docs/4.0/examples/carousel/carousel.css" rel="stylesheet">
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+</head>
+<body>
+
+<header th:insert="~{navigation}"></header>
+<main role="main">
+    <div th:replace="${content}">Layout content</div>
+</main>
+<footer class="container">
+    Layout footer
+</footer>
+</body>
+</html>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/users")
 public class UserController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String list() {
         return "admin/users/list";
     }

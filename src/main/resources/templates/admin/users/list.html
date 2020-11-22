@@ -1,53 +1,43 @@
-<html>
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+       th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title class="cym_i18n" data-i18nkey="title_activities">法會以及夏令營活動</title>
-
-    <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
-
-    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
-    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <title>Page Title</title>
 </head>
+<main>
+    <div class="table-responsive" id="usersDiv">
+        <b-container class="bv-example-row">
+            <b-row>
+                <b-col>Name</b-col>
+                <b-col>Email</b-col>
+                <b-col>PHone</b-col>
+            </b-row>
+            <b-row v-for="user in users">
+                <b-col>{{user.firstName}} {{user.lastName}}</b-col>
+                <b-col>{{user.email}}</b-col>
+                <b-col>{{user.phone}}</b-col>
+            </b-row>
+        </b-container>
 
-<body>
-
-<div class="table-responsive" id="usersDiv">
-    <table class="table table-striped table-sm">
-        <thead>
-        <tr>
-            <th class="cym_i18n" data-i18nkey="user_name">Name</th>
-        </tr>
-        </thead>
-        <tbody id="usersBody">
-            <tr v-for="user in users"><td>{{user.firstName}} {{user.lastName}}</td></tr>
-        </tbody>
-    </table>
-
-</div>
+    </div>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    const usersVue = new Vue({
-      el: '#usersDiv',
-      data: {
-        users: []
-      }
-    })
-
-    const usersUrl = 'http://localhost:8080/json/users'
-    fetch(usersUrl)
-      .then(res => res.json())
-      .then(json => {
-        const users = json._embedded.users;
-        usersVue.users = users
+      const usersVue = new Vue({
+        el: '#usersDiv',
+        data: {
+          users: []
+        }
       })
-</script>
-</body>
 
-
+      const usersUrl = 'http://localhost:8080/json/users'
+      fetch(usersUrl)
+        .then(res => res.json())
+        .then(json => {
+          const users = json._embedded.users;
+          usersVue.users = users
+        })
+    </script>
+</main>
 </html>
