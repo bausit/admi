@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org"
-       th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+       th:replace="layout :: layout(~{::title}, ~{::main}, ~{::script})">
 <head>
     <title>Page Title</title>
+    <script type="text/javascript" th:src="@{/js/users.js}" defer></script>
 </head>
 <main>
     <div class="table-responsive" id="usersDiv">
@@ -21,23 +22,5 @@
 
     </div>
 
-
-    <script type="text/javascript">
-
-      const usersVue = new Vue({
-        el: '#usersDiv',
-        data: {
-          users: []
-        }
-      })
-
-      const usersUrl = 'http://localhost:8080/json/users'
-      fetch(usersUrl)
-        .then(res => res.json())
-        .then(json => {
-          const users = json._embedded.users;
-          usersVue.users = users
-        })
-    </script>
 </main>
 </html>
