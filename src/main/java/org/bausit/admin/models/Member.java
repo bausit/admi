@@ -49,4 +49,11 @@ public class Member {
         joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
     )
     List<Skill> skills;
+
+    @OneToMany(mappedBy = "member")
+    private List<Note> notes;
+
+    @OneToMany(mappedBy = "member")
+    private List<ActivityMember> activities;
+
 }
