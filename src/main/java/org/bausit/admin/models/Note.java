@@ -23,4 +23,5 @@ public class Note {
     private Member member;
 
     private String note;
+    private boolean editable;
 }
