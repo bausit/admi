@@ -11,6 +11,7 @@ spring:
 
   datasource:
     url: jdbc:h2:mem:members;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    connectionProperties: useUnicode=true;characterEncoding=utf-8
   jpa:
     show-sql: true
     hibernate:
