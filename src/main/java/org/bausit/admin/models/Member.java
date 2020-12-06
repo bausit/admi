@@ -56,4 +56,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ActivityMember> activities;
 
+    @ManyToMany
+    @JoinTable(name = "member_permission",
+        inverseJoinColumns = @JoinColumn(name="permission_id", referencedColumnName = "id"),
+        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+    )
+    private List<Permission> permissions;
 }
