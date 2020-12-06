@@ -34,4 +34,6 @@ public class ActivityMember {
     private Instant checkinTime;
     private Instant checkoutTime;
 
+    @Column(columnDefinition="TEXT")
+    private String note;
 }

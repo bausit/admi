@@ -22,6 +22,7 @@ public class Note {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(columnDefinition="TEXT")
     private String note;
     private boolean editable;
 }
