@@ -30,10 +30,11 @@ public class ActivityMember {
     @JoinColumn(name = "function_id")
     private Function function;
 
-
     private Instant checkinTime;
     private Instant checkoutTime;
 
     @Column(columnDefinition="TEXT")
     private String note;
+
+    private boolean teamLead;
 }
