@@ -16,7 +16,7 @@ import java.time.Instant;
 public class ActivityMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")

@@ -18,7 +18,7 @@ import javax.persistence.Id;
 public class Function {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     private String name;
     private String description;
