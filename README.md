@@ -55,3 +55,7 @@ curl --location --request PUT 'http://localhost:8080/json/members/7/skills' \
 `
 ### Remove a skill from members
 `curl --location --request DELETE 'http://localhost:8080/json/members/7/skills/1'`
+
+### Installing java in EC2
+`sudo amazon-linux-extras install java-openjdk11`
+
