@@ -18,7 +18,7 @@ import javax.persistence.Id;
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     private String name;
 }

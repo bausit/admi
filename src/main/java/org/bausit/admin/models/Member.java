@@ -1,5 +1,6 @@
 package org.bausit.admin.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +19,15 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     private String chineseName;
     private String englishName;
     private Instant issueDate;
     private Type type;
     private String email;
+
+    @JsonIgnore
     private String password;
     private String phoneNumber;
     private int birthYear;
@@ -56,4 +59,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ActivityMember> activities;
 
+    @ManyToMany
+    @JoinTable(name = "member_permission",
+        inverseJoinColumns = @JoinColumn(name="permission_id", referencedColumnName = "id"),
+        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+    )
+    private List<Permission> permissions;
 }

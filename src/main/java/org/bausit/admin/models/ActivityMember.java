@@ -16,7 +16,7 @@ import java.time.Instant;
 public class ActivityMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
@@ -30,8 +30,11 @@ public class ActivityMember {
     @JoinColumn(name = "function_id")
     private Function function;
 
-
     private Instant checkinTime;
     private Instant checkoutTime;
 
+    @Column(columnDefinition="TEXT")
+    private String note;
+
+    private boolean teamLead;
 }

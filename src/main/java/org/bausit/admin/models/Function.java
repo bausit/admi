@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,8 +16,16 @@ import javax.persistence.Id;
 public class Function {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     private String name;
     private String description;
+
+    @ManyToMany
+    @JoinTable(name = "function_skill",
+        inverseJoinColumns = @JoinColumn(name="skill_id", referencedColumnName = "id"),
+        joinColumns = @JoinColumn(name = "function_id", referencedColumnName = "id")
+    )
+    //skills that are useful for this function, will be used to look up member candidates
+    private List<Skill> skills;
 }

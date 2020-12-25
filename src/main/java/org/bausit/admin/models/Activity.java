@@ -17,7 +17,7 @@ import java.util.List;
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     private String name;
     private String location;

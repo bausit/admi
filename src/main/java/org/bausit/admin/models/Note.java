@@ -16,12 +16,13 @@ public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long Id;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(columnDefinition="TEXT")
     private String note;
     private boolean editable;
 }
