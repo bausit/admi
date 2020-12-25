@@ -40,6 +40,7 @@ public class DataLoader implements CommandLineRunner {
                 .chineseName("名字")
                 .gender(Member.Gender.M)
                 .skills(skills)
+                .issueDate(Instant.now())
                 .build())
             .map(memberRepository::save)
             .map(member -> ActivityMember.builder()

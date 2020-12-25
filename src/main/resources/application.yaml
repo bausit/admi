@@ -21,3 +21,5 @@ spring:
   data:
     rest:
       basePath: /json
+server:
+  port: 9090
