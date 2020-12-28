@@ -28,4 +28,15 @@ public class Function {
     )
     //skills that are useful for this function, will be used to look up member candidates
     private List<Skill> skills;
+
+    @ManyToOne
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
+
+    @OneToMany(mappedBy = "function")
+    private List<FunctionMember> members;
+
+    @ManyToOne
+    @JoinColumn(name = "leader_id")
+    private Member leader;
 }

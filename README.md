@@ -59,3 +59,26 @@ curl --location --request PUT 'http://localhost:8080/json/members/7/skills' \
 ### Installing java in EC2
 `sudo amazon-linux-extras install java-openjdk11`
 
+### creating a function
+`
+curl --location --request POST 'http://localhost:9090/json/functions' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Main Shrine",
+    "description": ""
+}'
+`
+
+### assign function to an activity
+`
+curl --location --request PUT 'http://localhost:9090/json/functions/3/activity' \
+--header 'Content-Type: text/uri-list' \
+--data-raw '5'
+`
+
+### assign leader to a function
+`
+curl --location --request PUT 'http://localhost:9090/json/functions/3/leader' \
+--header 'Content-Type: text/uri-list' \
+--data-raw '12'
+`
