@@ -13,14 +13,10 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityMember {
+public class FunctionMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
-
-    @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activity;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -35,6 +31,4 @@ public class ActivityMember {
 
     @Column(columnDefinition="TEXT")
     private String note;
-
-    private boolean teamLead;
 }

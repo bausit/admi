@@ -24,6 +24,6 @@ public class Activity {
     private Instant date;
 
     @OneToMany(mappedBy = "activity")
-    private List<ActivityMember> members;
+    private List<Function> functions;
 
 }

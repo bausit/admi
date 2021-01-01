@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -57,7 +58,7 @@ public class Member {
     private List<Note> notes;
 
     @OneToMany(mappedBy = "member")
-    private List<ActivityMember> activities;
+    private List<FunctionMember> functions;
 
     @ManyToMany
     @JoinTable(name = "member_permission",
@@ -65,4 +66,10 @@ public class Member {
         joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
     )
     private List<Permission> permissions;
+
+    public List<Activity> getActivities() {
+        return functions.stream()
+            .map(f -> f.getFunction().getActivity())
+            .collect(Collectors.toList());
+    }
 }

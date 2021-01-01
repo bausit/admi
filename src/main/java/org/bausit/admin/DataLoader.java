@@ -19,17 +19,18 @@ public class DataLoader implements CommandLineRunner {
     private final SkillRepository skillRepository;
     private final FunctionRepository functionRepository;
     private final ActivityRepository activityRepository;
-    private final ActivityMemberRepository amRepository;
+    private final FunctionMemberRepository fmRepository;
 
     @Override
     public void run(String... args) {
         List<Skill> skills = createSkills();
         List<Function> functions = createFunctions();
 
-        List<Activity> activities = Arrays.stream(new String[] {"Chinese Lunar New Year Blessing Ceremony", "Qinming Ceremony"})
+        List<Activity> activities = Arrays.stream(new String[] {"Chinese Lunar New Year Blessing Ceremony"})
             .map(name -> Activity.builder()
                 .name(name)
                 .date(Instant.now())
+                .functions(functions)
                 .build())
             .map(activityRepository::save)
             .collect(Collectors.toList());
@@ -43,13 +44,12 @@ public class DataLoader implements CommandLineRunner {
                 .issueDate(Instant.now())
                 .build())
             .map(memberRepository::save)
-            .map(member -> ActivityMember.builder()
-                .activity(activities.get(0))
+            .map(member -> FunctionMember.builder()
                 .member(member)
                 .function(functions.get(0))
                 .build()
             )
-            .map(amRepository::save)
+            .map(fmRepository::save)
             .collect(Collectors.toList());
     }
 
