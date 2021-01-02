@@ -1,6 +1,7 @@
 package org.bausit.admin.dtos;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.bausit.admin.models.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @RequiredArgsConstructor
+@Value
 public class SecurityUser implements UserDetails {
     private final Member member;
 
@@ -28,7 +30,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

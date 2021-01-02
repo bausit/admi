@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bausit.admin.models.*;
 import org.bausit.admin.repositories.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -20,6 +21,8 @@ public class DataLoader implements CommandLineRunner {
     private final FunctionRepository functionRepository;
     private final ActivityRepository activityRepository;
     private final ActivityMemberRepository amRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PermissionRepository permissionRepository;
 
     @Override
     public void run(String... args) {
@@ -34,13 +37,20 @@ public class DataLoader implements CommandLineRunner {
             .map(activityRepository::save)
             .collect(Collectors.toList());
 
-        Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny"})
+        Permission permission = permissionRepository.save(Permission.builder()
+            .name("admin")
+            .build());
+
+        Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
             .map(name -> Member.builder()
                 .englishName(name)
                 .chineseName("名字")
+                .email(name + "@mail.com")
+                .password(passwordEncoder.encode("password"))
                 .gender(Member.Gender.M)
                 .skills(skills)
                 .issueDate(Instant.now())
+                .permissions(name.equals("user") ? List.of(permission): List.of())
                 .build())
             .map(memberRepository::save)
             .map(member -> ActivityMember.builder()
