@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Activity {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
@@ -23,7 +23,13 @@ public class Activity {
     private String location;
     private Instant date;
 
-    @OneToMany(mappedBy = "activity")
-    private List<Function> functions;
+    @OneToMany(mappedBy = "event")
+    private List<Team> teams;
 
+    @ManyToMany
+    @JoinTable(name = "event_participant",
+        inverseJoinColumns = @JoinColumn(name="participant_id", referencedColumnName = "id"),
+        joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id")
+    )
+    private List<Participant> invitedParticipants;
 }

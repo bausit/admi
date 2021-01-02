@@ -61,7 +61,7 @@ curl --location --request PUT 'http://localhost:8080/json/members/7/skills' \
 
 ### creating a function
 `
-curl --location --request POST 'http://localhost:9090/json/functions' \
+curl --location --request POST 'http://localhost:9090/json/teams' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Main Shrine",
@@ -71,14 +71,14 @@ curl --location --request POST 'http://localhost:9090/json/functions' \
 
 ### assign function to an activity
 `
-curl --location --request PUT 'http://localhost:9090/json/functions/3/activity' \
+curl --location --request PUT 'http://localhost:9090/json/teams/3/activity' \
 --header 'Content-Type: text/uri-list' \
 --data-raw '5'
 `
 
 ### assign leader to a function
 `
-curl --location --request PUT 'http://localhost:9090/json/functions/3/leader' \
+curl --location --request PUT 'http://localhost:9090/json/teams/3/leader' \
 --header 'Content-Type: text/uri-list' \
 --data-raw '12'
 `

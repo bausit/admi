@@ -9,14 +9,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +39,7 @@ public class Member {
     private String zipcode;
 
     public enum Type {
-        V, M
+        V, B, M
     }
 
     public enum Gender {
@@ -48,28 +47,20 @@ public class Member {
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "member_skill",
+    @JoinTable(name = "participant_skill",
         inverseJoinColumns = @JoinColumn(name="skill_id", referencedColumnName = "id"),
-        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+        joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id")
     )
-    List<Skill> skills;
+    private List<Skill> skills;
 
-    @OneToMany(mappedBy = "member")
-    private List<Note> notes;
-
-    @OneToMany(mappedBy = "member")
-    private List<FunctionMember> functions;
+    @Column(columnDefinition="TEXT")
+    private String note;
 
     @ManyToMany
-    @JoinTable(name = "member_permission",
+    @JoinTable(name = "participant_permission",
         inverseJoinColumns = @JoinColumn(name="permission_id", referencedColumnName = "id"),
-        joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id")
+        joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id")
     )
     private List<Permission> permissions;
 
-    public List<Activity> getActivities() {
-        return functions.stream()
-            .map(f -> f.getFunction().getActivity())
-            .collect(Collectors.toList());
-    }
 }

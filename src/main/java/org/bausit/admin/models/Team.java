@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Function {
+public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
@@ -22,21 +22,21 @@ public class Function {
     private String description;
 
     @ManyToMany
-    @JoinTable(name = "function_skill",
+    @JoinTable(name = "team_skill",
         inverseJoinColumns = @JoinColumn(name="skill_id", referencedColumnName = "id"),
-        joinColumns = @JoinColumn(name = "function_id", referencedColumnName = "id")
+        joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id")
     )
     //skills that are useful for this function, will be used to look up member candidates
     private List<Skill> skills;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activity;
+    @JoinColumn(name = "event_id")
+    private Event event;
 
-    @OneToMany(mappedBy = "function")
-    private List<FunctionMember> members;
+    @OneToMany(mappedBy = "team")
+    private List<TeamMember> members;
 
     @ManyToOne
     @JoinColumn(name = "leader_id")
-    private Member leader;
+    private Participant leader;
 }
