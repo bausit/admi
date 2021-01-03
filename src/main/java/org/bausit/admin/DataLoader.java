@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bausit.admin.models.*;
 import org.bausit.admin.repositories.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,11 +16,13 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
-    private final MemberRepository memberRepository;
+    private final ParticipantRepository participantRepository;
     private final SkillRepository skillRepository;
     private final FunctionRepository functionRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PermissionRepository permissionRepository;
     private final EventRepository eventRepository;
-    private final FunctionMemberRepository fmRepository;
+    private final EventMemberRepository fmRepository;
 
     @Override
     public void run(String... args) {
@@ -35,15 +38,22 @@ public class DataLoader implements CommandLineRunner {
             .map(eventRepository::save)
             .collect(Collectors.toList());
 
-        Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny"})
+        Permission permission = permissionRepository.save(Permission.builder()
+            .name("admin")
+            .build());
+
+        Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
             .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")
+                .email(name + "@mail.com")
+                .password(passwordEncoder.encode("password"))
                 .gender(Participant.Gender.M)
                 .skills(skills)
                 .issueDate(Instant.now())
+                .permissions(name.equals("user") ? List.of(): List.of(permission))
                 .build())
-            .map(memberRepository::save)
+            .map(participantRepository::save)
             .map(member -> TeamMember.builder()
                 .participant(member)
                 .team(teams.get(0))

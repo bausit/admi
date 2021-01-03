@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FunctionMemberRepository extends CrudRepository<TeamMember, Long> {
+public interface EventMemberRepository extends CrudRepository<TeamMember, Long> {
 }

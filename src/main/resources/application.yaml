@@ -23,3 +23,8 @@ spring:
       basePath: /json
 server:
   port: 9090
+
+security:
+  jwt:
+    secret: baus-admin-@Ckd
+    expirationSecond: 18000 # 5 hours
