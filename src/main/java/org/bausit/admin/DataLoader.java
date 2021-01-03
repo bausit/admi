@@ -18,79 +18,63 @@ import java.util.stream.Collectors;
 public class DataLoader implements CommandLineRunner {
     private final ParticipantRepository participantRepository;
     private final SkillRepository skillRepository;
-    private final FunctionRepository functionRepository;
+    private final TeamRepository functionRepository;
     private final PasswordEncoder passwordEncoder;
     private final PermissionRepository permissionRepository;
     private final EventRepository eventRepository;
-    private final EventMemberRepository fmRepository;
+    private final TeamMemberRepository fmRepository;
 
     @Override
     public void run(String... args) {
-        List<Skill> skills = createSkills();
-        List<Team> teams = createFunctions();
-
-        List<Event> activities = Arrays.stream(new String[] {"Chinese Lunar New Year Blessing Ceremony"})
-            .map(name -> Event.builder()
-                .name(name)
-                .date(Instant.now())
-                .teams(teams)
-                .build())
-            .map(eventRepository::save)
-            .collect(Collectors.toList());
+        Skill  chef = createSkill("Chef");
+        Skill  engineering = createSkill("Engineering");
 
         Permission permission = permissionRepository.save(Permission.builder()
             .name("admin")
             .build());
 
-        Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
+        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
             .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")
                 .email(name + "@mail.com")
-                .password(passwordEncoder.encode("password"))
+                .phoneNumber("555-123-0000")
+                .address("address for " + name)
+                .city("New York").zipcode("10001").password(passwordEncoder.encode("password"))
                 .gender(Participant.Gender.M)
-                .skills(skills)
-                .issueDate(Instant.now())
+                .state("NY")
+                .type(Participant.Type.V)
+                .skills(List.of(chef,engineering))
+                .birthYear(2000).issueDate(Instant.now())
                 .permissions(name.equals("user") ? List.of(): List.of(permission))
                 .build())
             .map(participantRepository::save)
-            .map(member -> TeamMember.builder()
-                .participant(member)
-                .team(teams.get(0))
-                .build()
-            )
-            .map(fmRepository::save)
             .collect(Collectors.toList());
+
+        Event event = Event.builder().name("Chinese Lunar New Year Blessing Ceremony")
+                .date(Instant.now())
+                .location("the Temple")
+                .invitedParticipants(participants).build();
+        event = eventRepository.save(event);
+
+        Team cafe = createTeam("Food", event, List.of(chef));
+        Team it = createTeam("IT", event, List.of(engineering));
+
+        event.setTeams(List.of(cafe,it));
+        eventRepository.save(event);
+
     }
 
-    private List<Skill> createSkills() {
-        List<Skill> skills = new ArrayList<>();
-
-        skills.add(skillRepository.save(
-            Skill.builder().name("Chef")
+    private Skill createSkill(String skill) {
+        return skillRepository.save(
+            Skill.builder().name(skill).description(skill)
              .build()
-        ));
-        skills.add(skillRepository.save(
-            Skill.builder().name("Software Developer")
-                .build()
-        ));
-
-        return skills;
+        );
     }
 
-    private List<Team> createFunctions() {
-        List<Team> teams = new ArrayList<>();
-        teams.add(
-            functionRepository.save(
-                Team.builder().name("Organizer").build()
-            )
-        );
-        teams.add(
-            functionRepository.save(
-                Team.builder().name("Leader").build()
-            )
-        );
-
-        return teams;
+    private Team createTeam(String teamName, Event event, List<Skill> skills) {
+        return  functionRepository.save(
+                Team.builder().name(teamName).description(teamName).event(event).skills(skills).build()
+            );
     }
 }

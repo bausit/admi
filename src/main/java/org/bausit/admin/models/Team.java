@@ -38,5 +38,5 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "leader_id")
-    private Participant leader;
+    private TeamMember leader;
 }
