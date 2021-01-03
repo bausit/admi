@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MemberRepository extends CrudRepository<Participant, Long>,
+public interface ParticipantRepository extends CrudRepository<Participant, Long>,
     QuerydslPredicateExecutor<Participant>,
     QuerydslBinderCustomizer<QParticipant> {
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.dtos.SecurityUser;
 import org.bausit.admin.models.Participant;
-import org.bausit.admin.repositories.MemberRepository;
+import org.bausit.admin.repositories.ParticipantRepository;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class ParticipantService implements UserDetailsService {
-    private final MemberRepository memberRepository;
+    private final ParticipantRepository participantRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Participant participant = memberRepository.findByEmail(email).get(0);
+        Participant participant = participantRepository.findByEmail(email).get(0);
         Hibernate.initialize(participant.getPermissions());
         return new SecurityUser(participant);
     }
