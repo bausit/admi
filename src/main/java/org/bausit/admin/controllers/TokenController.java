@@ -24,6 +24,7 @@ public class TokenController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    //generate jwt tokens to be used as authorization header in future requests
     @PostMapping
     public TokenResponse authenticateUser(@RequestBody TokenRequest tokenRequest) {
         Authentication authentication = authenticationManager.authenticate(

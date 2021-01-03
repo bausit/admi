@@ -2,8 +2,35 @@
 This project uses Spring Data Rest to expose REST endpoints
 to perform CRUD operations.
 
-## List object types
-`curl http://localhost8080/json`
+## Security
+### Request tokens
+`
+curl --location --request POST 'http://localhost:9090/api/token' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "danny@mail.com",
+    "password": "password"
+}'
+`
+### Token response
+`
+{
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYW5ueUBtYWlsLmNvbSIsImlhdCI6MTYwOTY0MDgzNCwiZXhwIjoxNjA5NjU4ODM0fQ.DDhy5CCLH8hxqxgHPOr15Pygro4aTKzA7dBThZmmQeIU3Bg7nsT-PWFw7qrmYBkqVAY74HYClaiGHdj-iHXGoQ",
+    "type": "Bearer",
+    "id": 13,
+    "username": "danny@mail.com",
+    "email": "danny@mail.com",
+    "roles": [
+        "admin"
+    ]
+}
+`
+
+### Request with token
+`
+curl http://localhost8080/json/skills \
+-H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYW5ueUBtYWlsLmNvbSIsImlhdCI6MTYwOTY0MDgzNCwiZXhwIjoxNjA5NjU4ODM0fQ.DDhy5CCLH8hxqxgHPOr15Pygro4aTKzA7dBThZmmQeIU3Bg7nsT-PWFw7qrmYBkqVAY74HYClaiGHdj-iHXGoQ'
+`
 
 ## List objects
 `curl http://localhost8080/json/skills`

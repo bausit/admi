@@ -68,7 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/api/token**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
+
+                //only users with role admin can access permissions
                 .antMatchers("/json/permissions**").hasAnyAuthority("admin")
+
+                //only user with role admin can update member information
                 .antMatchers("/json/members**", "POST", "PUT", "PATCH").hasAnyAuthority("admin")
                 .anyRequest().authenticated();
 
