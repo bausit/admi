@@ -2,7 +2,7 @@ package org.bausit.admin.dtos;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.bausit.admin.models.Member;
+import org.bausit.admin.models.Participant;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,21 +11,21 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @Value
 public class SecurityUser implements UserDetails {
-    private final Member member;
+    private final Participant participant;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return member.getPermissions();
+        return participant.getPermissions();
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return participant.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return participant.getEmail();
     }
 
     @Override

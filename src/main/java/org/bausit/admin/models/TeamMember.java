@@ -6,23 +6,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 
+@Data
 @Entity
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Note {
-
+public class TeamMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "participant_id")
+    private Participant participant;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+    private Instant checkinTime;
+    private Instant checkoutTime;
 
     @Column(columnDefinition="TEXT")
     private String note;
-    private boolean editable;
 }

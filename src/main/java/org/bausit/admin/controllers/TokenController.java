@@ -39,7 +39,7 @@ public class TokenController {
 
         return TokenResponse.builder()
             .token(jwt)
-            .id(userDetails.getMember().getId())
+            .id(userDetails.getParticipant().getId())
             .username(userDetails.getUsername())
             .email(userDetails.getUsername())
             .roles(roles)

@@ -19,22 +19,23 @@ public class DataLoader implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final SkillRepository skillRepository;
     private final FunctionRepository functionRepository;
-    private final ActivityRepository activityRepository;
-    private final ActivityMemberRepository amRepository;
     private final PasswordEncoder passwordEncoder;
     private final PermissionRepository permissionRepository;
+    private final EventRepository eventRepository;
+    private final FunctionMemberRepository fmRepository;
 
     @Override
     public void run(String... args) {
         List<Skill> skills = createSkills();
-        List<Function> functions = createFunctions();
+        List<Team> teams = createFunctions();
 
-        List<Activity> activities = Arrays.stream(new String[] {"Chinese Lunar New Year Blessing Ceremony", "Qinming Ceremony"})
-            .map(name -> Activity.builder()
+        List<Event> activities = Arrays.stream(new String[] {"Chinese Lunar New Year Blessing Ceremony"})
+            .map(name -> Event.builder()
                 .name(name)
                 .date(Instant.now())
+                .teams(teams)
                 .build())
-            .map(activityRepository::save)
+            .map(eventRepository::save)
             .collect(Collectors.toList());
 
         Permission permission = permissionRepository.save(Permission.builder()
@@ -42,24 +43,23 @@ public class DataLoader implements CommandLineRunner {
             .build());
 
         Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
-            .map(name -> Member.builder()
+            .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")
                 .email(name + "@mail.com")
                 .password(passwordEncoder.encode("password"))
-                .gender(Member.Gender.M)
+                .gender(Participant.Gender.M)
                 .skills(skills)
                 .issueDate(Instant.now())
-                .permissions(name.equals("user") ? List.of(permission): List.of())
+                .permissions(name.equals("user") ? List.of(): List.of(permission))
                 .build())
             .map(memberRepository::save)
-            .map(member -> ActivityMember.builder()
-                .activity(activities.get(0))
-                .member(member)
-                .function(functions.get(0))
+            .map(member -> TeamMember.builder()
+                .participant(member)
+                .team(teams.get(0))
                 .build()
             )
-            .map(amRepository::save)
+            .map(fmRepository::save)
             .collect(Collectors.toList());
     }
 
@@ -78,19 +78,19 @@ public class DataLoader implements CommandLineRunner {
         return skills;
     }
 
-    private List<Function> createFunctions() {
-        List<Function> functions = new ArrayList<>();
-        functions.add(
+    private List<Team> createFunctions() {
+        List<Team> teams = new ArrayList<>();
+        teams.add(
             functionRepository.save(
-                Function.builder().name("Organizer").build()
+                Team.builder().name("Organizer").build()
             )
         );
-        functions.add(
+        teams.add(
             functionRepository.save(
-                Function.builder().name("Leader").build()
+                Team.builder().name("Leader").build()
             )
         );
 
-        return functions;
+        return teams;
     }
 }
