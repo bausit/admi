@@ -10,10 +10,11 @@ import org.bausit.admin.models.Participant;
 
 @RequiredArgsConstructor
 @Log4j2
-public class ParticipantPredicate {
+public class EntityPredicate {
     private final SearchCriteria criteria;
+    private final Class clazz;
     public BooleanExpression getPredicate() {
-        PathBuilder<Participant> entityPath = new PathBuilder<>(Participant.class, "participant");
+        PathBuilder<Participant> entityPath = new PathBuilder<>(clazz, clazz.getSimpleName().toLowerCase());
 
         if (isNumeric(criteria.getValue())) {
             NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);

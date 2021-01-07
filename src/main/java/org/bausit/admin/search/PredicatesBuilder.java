@@ -10,16 +10,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Log4j2
-public class ParticipantPredicatesBuilder {
+public class PredicatesBuilder<E> {
+    private final Class clazz;
     private List<SearchCriteria> params;
 
-    public ParticipantPredicatesBuilder() {
+    public PredicatesBuilder(Class clazz) {
+        this.clazz = clazz;
         params = new ArrayList<>();
     }
 
-    public ParticipantPredicatesBuilder with(
-        String key, String operation, Object value) {
-
+    public PredicatesBuilder with(String key, String operation, Object value) {
         params.add(new SearchCriteria(key, operation, value));
         return this;
     }
@@ -33,7 +33,7 @@ public class ParticipantPredicatesBuilder {
         }
 
         List<BooleanExpression> predicates = params.stream()
-            .map(param -> new ParticipantPredicate(param).getPredicate())
+            .map(param -> new EntityPredicate(param, clazz).getPredicate())
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
         for (BooleanExpression predicate : predicates) {
