@@ -1,9 +1,6 @@
 package org.bausit.admin.search;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.models.Participant;
@@ -28,12 +25,17 @@ public class EntityPredicate {
                     return path.lt(value);
             }
         }
-        else {
+        else if (criteria.getValue() instanceof String) {
             StringPath path = entityPath.getString(criteria.getKey());
             if (criteria.getOperation().equalsIgnoreCase(":")) {
                 return path.containsIgnoreCase(criteria.getValue().toString());
             }
         }
+        else {
+            PathBuilder<Object> path = entityPath.get(criteria.getKey());
+            return path.eq(criteria.getValue());
+        }
+
         return null;
     }
 

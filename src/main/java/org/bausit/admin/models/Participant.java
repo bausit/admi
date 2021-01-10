@@ -24,6 +24,7 @@ public class Participant {
     private String chineseName;
     private String englishName;
     private Instant issueDate;
+    @Enumerated(EnumType.STRING)
     private Type type;
     private String email;
 
@@ -31,6 +32,7 @@ public class Participant {
     private String password;
     private String phoneNumber;
     private int birthYear;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private boolean refuge;
     private String address;
@@ -46,7 +48,7 @@ public class Participant {
         F, M
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "participant_skill",
         inverseJoinColumns = @JoinColumn(name="skill_id", referencedColumnName = "id"),
         joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id")
