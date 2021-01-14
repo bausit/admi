@@ -97,7 +97,8 @@ public class ParticipantService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Participant participant = participantRepository.findByEmail(email).get(0);
+        Participant participant = participantRepository.findByEmail(email.toLowerCase())
+            .get(0);
         Hibernate.initialize(participant.getPermissions());
         return new SecurityUser(participant);
     }
