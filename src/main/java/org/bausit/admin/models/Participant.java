@@ -65,4 +65,6 @@ public class Participant {
     )
     private List<Permission> permissions;
 
+    @Column(columnDefinition="TEXT")
+    private String preferences;
 }

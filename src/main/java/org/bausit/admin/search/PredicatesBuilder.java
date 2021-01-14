@@ -4,11 +4,16 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Log4j2
-public class PredicatesBuilder<E> {
+public class PredicatesBuilder {
+    public static final Pattern PATTERN = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+
     private final Class clazz;
     private List<SearchCriteria> params;
 
