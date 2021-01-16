@@ -33,7 +33,7 @@ public class DataLoader implements CommandLineRunner {
             .name("admin")
             .build());
 
-        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
+        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")

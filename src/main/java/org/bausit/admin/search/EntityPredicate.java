@@ -5,7 +5,6 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import lombok.extern.log4j.Log4j2;
-import org.bausit.admin.models.Participant;
 import org.springframework.util.ClassUtils;
 
 import java.util.Arrays;
@@ -28,7 +27,7 @@ public class EntityPredicate {
     }
 
     public BooleanExpression getPredicate() {
-        PathBuilder<Participant> entityPath = new PathBuilder<>(clazz, clazz.getSimpleName().toLowerCase());
+        PathBuilder entityPath = new PathBuilder<>(clazz, clazz.getSimpleName().toLowerCase());
         Class fieldClass = fields.get(criteria.getKey());
         if(String.class.equals(fieldClass)) {
             StringPath path = entityPath.getString(criteria.getKey());
@@ -54,14 +53,5 @@ public class EntityPredicate {
         }
 
         return null;
-    }
-
-    private boolean isNumeric(Object value) {
-        try {
-            Integer.parseInt((String)value);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

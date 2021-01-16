@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.dtos.SecurityUser;
 import org.bausit.admin.models.Participant;
+import org.bausit.admin.models.QParticipant;
 import org.bausit.admin.repositories.ParticipantRepository;
 import org.bausit.admin.search.PredicatesBuilder;
 import org.hibernate.Hibernate;
@@ -35,11 +36,18 @@ public class ParticipantService implements UserDetailsService {
 
     public Iterable<Participant> query(String query) {
         PredicatesBuilder builder = new PredicatesBuilder(Participant.class);
+        QParticipant participant = QParticipant.participant;
+
         if (StringUtils.hasLength(query)) {
             Matcher matcher = PredicatesBuilder.PATTERN.matcher(query + ",");
             while (matcher.find()) {
                 Object value = matcher.group(3);
                 String name = matcher.group(1);
+
+                if("skills".equals(name)) {
+                    builder.with(participant.skills.any().Id.eq(Long.parseLong(value+"")));
+                    continue;
+                }
 
                 if("gender".equals(name)) {
                     value = Participant.Gender.valueOf(matcher.group(3));

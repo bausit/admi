@@ -1,5 +1,6 @@
 package org.bausit.admin.search;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import lombok.extern.log4j.Log4j2;
@@ -16,10 +17,17 @@ public class PredicatesBuilder {
 
     private final Class clazz;
     private List<SearchCriteria> params;
+    private List<Predicate> addedPredicates;
 
     public PredicatesBuilder(Class clazz) {
         this.clazz = clazz;
         params = new ArrayList<>();
+        addedPredicates = new ArrayList<>();
+    }
+
+    public PredicatesBuilder with(Predicate predicate) {
+        addedPredicates.add(predicate);
+        return this;
     }
 
     public PredicatesBuilder with(String key, String operation, Object value) {
@@ -30,11 +38,6 @@ public class PredicatesBuilder {
     public BooleanExpression build() {
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
 
-        if (params.size() == 0) {
-            log.info("no parameters found");
-            return result;
-        }
-
         List<BooleanExpression> predicates = params.stream()
             .map(param -> new EntityPredicate(param, clazz).getPredicate())
             .filter(Objects::nonNull)
@@ -42,6 +45,11 @@ public class PredicatesBuilder {
         for (BooleanExpression predicate : predicates) {
             result = result.and(predicate);
         }
+
+        for(Predicate p : addedPredicates) {
+            result = result.and(p);
+        }
+
         return result;
     }
 }
