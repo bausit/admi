@@ -3,12 +3,12 @@ package org.bausit.admin;
 import lombok.RequiredArgsConstructor;
 import org.bausit.admin.models.*;
 import org.bausit.admin.repositories.*;
+import org.bausit.admin.services.ParticipantService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
-    private final ParticipantRepository participantRepository;
+    private final ParticipantService participantService;
     private final SkillRepository skillRepository;
     private final TeamRepository functionRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +33,7 @@ public class DataLoader implements CommandLineRunner {
             .name("admin")
             .build());
 
-        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "user"})
+        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")
@@ -48,7 +48,7 @@ public class DataLoader implements CommandLineRunner {
                 .birthYear(2000).issueDate(Instant.now())
                 .permissions(name.equals("user") ? List.of(): List.of(permission))
                 .build())
-            .map(participantRepository::save)
+            .map(participantService::create)
             .collect(Collectors.toList());
 
         Event event = Event.builder().name("Chinese Lunar New Year Blessing Ceremony")

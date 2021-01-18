@@ -28,3 +28,5 @@ security:
   jwt:
     secret: baus-admin-@Ckd
     expirationSecond: 18000 # 5 hours
+
+logging.level.org.bausit.admin: DEBUG
