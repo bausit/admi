@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,7 +34,7 @@ public class DataLoader implements CommandLineRunner {
             .name("admin")
             .build());
 
-        List<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
+        Set<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
                 .englishName(name)
                 .chineseName("名字")
@@ -49,12 +50,13 @@ public class DataLoader implements CommandLineRunner {
                 .permissions(name.equals("user") ? List.of(): List.of(permission))
                 .build())
             .map(participantService::create)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
 
         Event event = Event.builder().name("Chinese Lunar New Year Blessing Ceremony")
                 .date(Instant.now())
                 .location("the Temple")
-                .invitedParticipants(participants).build();
+                //.invitedParticipants(participants)
+                .build();
         event = eventRepository.save(event);
 
         Team cafe = createTeam("Food", event, List.of(chef));
