@@ -1,13 +1,11 @@
 package org.bausit.admin.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -33,12 +31,21 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore//prevent json recursion
+    @EqualsAndHashCode.Exclude
     private Event event;
 
     @OneToMany(mappedBy = "team")
-    private List<TeamMember> members;
+    @EqualsAndHashCode.Exclude
+    private Set<TeamMember> members;
 
     @ManyToOne
     @JoinColumn(name = "leader_id")
     private TeamMember leader;
+
+    public boolean isMember(Participant participant) {
+        return members.stream()
+            .filter(teamMember -> teamMember.getParticipant().getId() == participant.getId())
+            .findAny()
+            .isPresent();
+    }
 }

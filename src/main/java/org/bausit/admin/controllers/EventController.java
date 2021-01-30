@@ -3,6 +3,7 @@ package org.bausit.admin.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.models.Event;
+import org.bausit.admin.models.Team;
 import org.bausit.admin.services.EventService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,5 +27,14 @@ public class EventController {
     public void invite(@PathVariable long eventId, @RequestBody List<Long> participants) {
         Event event = eventService.findById(eventId);
         eventService.invite(event, participants);
+    }
+
+    @PostMapping("/{eventId}/{teamId}")
+    public void assignTeamMember(@PathVariable long eventId,
+                              @PathVariable long teamId,
+                              @RequestBody List<Long> participants) {
+        Event event = eventService.findById(eventId);
+        Team team = eventService.findTeam(event, teamId);
+        eventService.assignTeamMember(event, team, participants);
     }
 }
