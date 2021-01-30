@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -31,5 +32,5 @@ public class Event {
         inverseJoinColumns = @JoinColumn(name="participant_id", referencedColumnName = "id"),
         joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id")
     )
-    private List<Participant> invitedParticipants;
+    private Set<Participant> invitedParticipants;
 }

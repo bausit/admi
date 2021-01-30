@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.dtos.SecurityUser;
+import org.bausit.admin.exceptions.EntityNotFoundException;
 import org.bausit.admin.models.Participant;
 import org.bausit.admin.models.QParticipant;
 import org.bausit.admin.repositories.ParticipantRepository;
@@ -60,6 +61,11 @@ public class ParticipantService implements UserDetailsService {
         }
         BooleanExpression exp = builder.build();
         return participantRepository.findAll(exp);
+    }
+
+    public Participant findById(long participantId) {
+        return participantRepository.findById(participantId)
+            .orElseThrow(() -> new EntityNotFoundException("Unable to find participant with id: " + participantId));
     }
 
     public Map getPreference(Participant participant, String section) {

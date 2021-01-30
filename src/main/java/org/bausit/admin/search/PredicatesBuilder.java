@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 public class PredicatesBuilder {
-    public static final Pattern PATTERN = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+    public static final Pattern PATTERN = Pattern.compile("(\\w+?)(:|<|>)([\\w-]+?),");
 
     private final Class clazz;
     private List<SearchCriteria> params;

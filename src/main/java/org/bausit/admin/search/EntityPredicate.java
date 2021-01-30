@@ -1,14 +1,15 @@
 package org.bausit.admin.search;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.ClassUtils;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Log4j2
@@ -16,6 +17,8 @@ public class EntityPredicate {
     private final SearchCriteria criteria;
     private final Class clazz;
     private Map<String, Class> fields;
+    private final DateTimeFormatter instantFormat = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss" , Locale.US )
+        .withZone(ZoneId.systemDefault());
 
     public EntityPredicate(SearchCriteria criteria, Class clazz) {
         this.criteria = criteria;
@@ -33,6 +36,18 @@ public class EntityPredicate {
             StringPath path = entityPath.getString(criteria.getKey());
             if (criteria.getOperation().equalsIgnoreCase(":")) {
                 return path.containsIgnoreCase(criteria.getValue().toString());
+            }
+        }
+        else if(fieldClass.equals(Instant.class)) {
+            TimePath<Instant> path = entityPath.getTime(criteria.getKey(), Instant.class);
+            Instant value = Instant.from(instantFormat.parse(criteria.getValue().toString() + " 00:00:00"));
+            switch (criteria.getOperation()) {
+                case ":":
+                    return path.eq(value);
+                case ">":
+                    return path.gt(value);
+                case "<":
+                    return path.lt(value);
             }
         }
         else if (ClassUtils.isPrimitiveOrWrapper(fieldClass)) {
