@@ -1,5 +1,6 @@
 package org.bausit.admin.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore//prevent json recursion
     private Event event;
 
     @OneToMany(mappedBy = "team")
