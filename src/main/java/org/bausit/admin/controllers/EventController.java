@@ -23,13 +23,13 @@ public class EventController {
         return eventService.query(query);
     }
 
-    @PostMapping("/{eventId}")
+    @PostMapping("/invite/{eventId}")
     public void invite(@PathVariable long eventId, @RequestBody List<Long> participants) {
         Event event = eventService.findById(eventId);
         eventService.invite(event, participants);
     }
 
-    @PostMapping("/{eventId}/{teamId}")
+    @PostMapping("/assign/{eventId}/{teamId}")
     public void assignTeamMember(@PathVariable long eventId,
                               @PathVariable long teamId,
                               @RequestBody List<Long> participants) {
