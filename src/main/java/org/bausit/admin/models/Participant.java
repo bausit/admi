@@ -67,4 +67,8 @@ public class Participant {
 
     @Column(columnDefinition="TEXT")
     private String preferences;
+
+    public boolean equals(Participant p) {
+        return p.getId() == p.getId();
+    }
 }

@@ -49,6 +49,8 @@ public class EventService {
     public void invite(Event event, List<Long> participants) {
         participants.stream()
             .map(id -> participantService.findById(id))
+            //don't invite if participant already joined the event
+            .filter(participant -> !event.hasParticipant(participant))
             .forEach(participant -> event.getInvitedParticipants().add(participant));
 
         eventRepository.save(event);

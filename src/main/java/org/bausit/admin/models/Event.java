@@ -33,4 +33,18 @@ public class Event {
         joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id")
     )
     private Set<Participant> invitedParticipants;
+
+    public boolean hasParticipant(Participant participant) {
+        if(getInvitedParticipants().contains(participant))
+            return true;
+
+        for (Team team : getTeams()) {
+            for (TeamMember member : team.getMembers()) {
+                if (member.getParticipant().equals(participant))
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }
