@@ -42,7 +42,7 @@ public class Team {
     @JoinColumn(name = "leader_id")
     private TeamMember leader;
 
-    public boolean isMember(Participant participant) {
+    public boolean hasParticipant(Participant participant) {
         return members.stream()
             .filter(teamMember -> teamMember.getParticipant().getId() == participant.getId())
             .findAny()

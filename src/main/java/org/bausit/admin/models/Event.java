@@ -38,13 +38,9 @@ public class Event {
         if(getInvitedParticipants().contains(participant))
             return true;
 
-        for (Team team : getTeams()) {
-            for (TeamMember member : team.getMembers()) {
-                if (member.getParticipant().equals(participant))
-                    return true;
-            }
-        }
-
-        return false;
+        return getTeams().stream()
+            .filter(team -> team.hasParticipant(participant))
+            .findAny()
+            .isPresent();
     }
 }
