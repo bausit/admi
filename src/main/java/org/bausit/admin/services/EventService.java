@@ -49,6 +49,8 @@ public class EventService {
     public void invite(Event event, List<Long> participants) {
         participants.stream()
             .map(id -> participantService.findById(id))
+            //don't invite if participant already joined the event
+            .filter(participant -> !event.hasParticipant(participant))
             .forEach(participant -> event.getInvitedParticipants().add(participant));
 
         eventRepository.save(event);
@@ -67,7 +69,8 @@ public class EventService {
         participants.stream()
             .map(id -> participantService.findById(id))
             .forEach(participant -> {
-                if(!team.isMember(participant)) {
+                //don't assign if participant is already
+                if(!team.hasParticipant(participant)) {
                     TeamMember member = TeamMember.builder()
                         .participant(participant)
                         .team(team)
@@ -78,5 +81,7 @@ public class EventService {
 
                 event.getInvitedParticipants().remove(participant);
             });
+
+        eventRepository.save(event);
     }
 }
