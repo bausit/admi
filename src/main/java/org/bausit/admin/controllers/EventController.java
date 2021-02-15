@@ -16,6 +16,11 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
 
+    @GetMapping("/{eventId}")
+    public Event getEvent(@PathVariable long eventId) {
+        return eventService.findById(eventId);
+    }
+
     @GetMapping
     public Iterable<Event> search(@RequestParam(required = false) String query) {
         log.info("search keywords: {}", query);
