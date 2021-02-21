@@ -74,12 +74,22 @@ public class Participant {
     }
 
     public String getSkillsAsString() {
-        if(this.getSkills() == null)
+        if(getSkills() == null)
             return "";
 
-        return this.getSkills()
+        return getSkills()
             .stream()
             .map(skill -> skill.getName())
+            .collect(Collectors.joining(", "));
+    }
+
+    public String getPermissionsAsString() {
+        if(getPermissions() != null)
+            return "";
+
+        return getPermissions()
+            .stream()
+            .map(permission -> permission.getName())
             .collect(Collectors.joining(", "));
     }
 

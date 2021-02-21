@@ -33,6 +33,9 @@ public class DataLoader implements CommandLineRunner {
         Permission permission = permissionRepository.save(Permission.builder()
             .name("admin")
             .build());
+        Permission su = permissionRepository.save(Permission.builder()
+            .name("super_admin")
+            .build());
 
         Set<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
@@ -47,7 +50,7 @@ public class DataLoader implements CommandLineRunner {
                 .type(Participant.Type.V)
                 .skills(List.of(chef,engineering))
                 .birthYear(2000).issueDate(Instant.now())
-                .permissions(name.equals("user") ? List.of(): List.of(permission))
+                .permissions(name.equals("user") ? List.of(): List.of(permission, su))
                 .build())
             .map(participantService::create)
             .collect(Collectors.toSet());
