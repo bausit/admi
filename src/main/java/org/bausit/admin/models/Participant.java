@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -70,5 +71,31 @@ public class Participant {
 
     public boolean equals(Participant p) {
         return p.getId() == p.getId();
+    }
+
+    public String getSkillsAsString() {
+        if(getSkills() == null)
+            return "";
+
+        return getSkills()
+            .stream()
+            .map(skill -> skill.getName())
+            .collect(Collectors.joining(", "));
+    }
+
+    public String getPermissionsAsString() {
+        if(getPermissions() == null)
+            return "";
+
+        return getPermissions()
+            .stream()
+            .map(permission -> permission.getName())
+            .collect(Collectors.joining(", "));
+    }
+
+    public void initViewMode() {
+        this.permissions = null;
+        this.preferences = null;
+        this.note = null;
     }
 }
