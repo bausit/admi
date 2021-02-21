@@ -84,7 +84,7 @@ public class Participant {
     }
 
     public String getPermissionsAsString() {
-        if(getPermissions() != null)
+        if(getPermissions() == null)
             return "";
 
         return getPermissions()
