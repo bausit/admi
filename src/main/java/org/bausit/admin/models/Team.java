@@ -48,4 +48,11 @@ public class Team {
             .findAny()
             .isPresent();
     }
+
+    public void initViewMode() {
+        if(getMembers() != null)
+            this.getMembers().forEach(member -> member.initViewMode());
+        if(getLeader() != null)
+            this.getLeader().initViewMode();
+    }
 }

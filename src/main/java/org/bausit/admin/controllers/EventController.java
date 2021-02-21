@@ -18,7 +18,9 @@ public class EventController {
 
     @GetMapping("/{eventId}")
     public Event getEvent(@PathVariable long eventId) {
-        return eventService.findById(eventId);
+        Event event = eventService.findById(eventId);
+        event.initViewMode();
+        return event;
     }
 
     @GetMapping

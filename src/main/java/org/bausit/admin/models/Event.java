@@ -43,4 +43,12 @@ public class Event {
             .findAny()
             .isPresent();
     }
+
+    public void initViewMode() {
+        if(getTeams() != null)
+            getTeams().forEach(team -> team.initViewMode());
+
+        if(getInvitedParticipants() != null)
+            getInvitedParticipants().forEach(participant -> participant.initViewMode());
+    }
 }

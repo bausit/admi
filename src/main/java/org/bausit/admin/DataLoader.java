@@ -52,7 +52,7 @@ public class DataLoader implements CommandLineRunner {
             .map(participantService::create)
             .collect(Collectors.toSet());
 
-        Event event = Event.builder().name("Chinese Lunar New Year Blessing Ceremony")
+        Event event = Event.builder().name("清明法会Chinese Lunar New Year Blessing Ceremony")
                 .date(Instant.now())
                 .location("the Temple")
                 //.invitedParticipants(participants)

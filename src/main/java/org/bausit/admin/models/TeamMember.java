@@ -31,4 +31,10 @@ public class TeamMember {
 
     @Column(columnDefinition="TEXT")
     private String note;
+
+    public void initViewMode() {
+        this.team = null;
+        if(getParticipant() != null)
+            getParticipant().initViewMode();
+    }
 }
