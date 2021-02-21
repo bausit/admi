@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/permission")
+@RequestMapping("/api/permissions")
 public class PermissionController {
     private final ParticipantService participantService;
     private final PermissionService permissionService;
