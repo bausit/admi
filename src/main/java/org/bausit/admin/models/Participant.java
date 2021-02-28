@@ -22,8 +22,11 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
+    private int memberNumber;
+
     private String chineseName;
-    private String englishName;
+    private String firstName;
+    private String lastName;
     private Instant issueDate;
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -33,13 +36,17 @@ public class Participant {
     private String password;
     private String phoneNumber;
     private int birthYear;
+    private Instant birthDate;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private boolean refuge;
     private String address;
     private String city;
     private String state;
     private String zipcode;
+    private String emergencyContact;
 
     public enum Type {
         V, B, M
@@ -47,6 +54,10 @@ public class Participant {
 
     public enum Gender {
         F, M
+    }
+
+    public enum Status {
+        A, I
     }
 
     @ManyToMany
@@ -58,6 +69,9 @@ public class Participant {
 
     @Column(columnDefinition="TEXT")
     private String note;
+
+    @Column(columnDefinition="TEXT")
+    private String remark;
 
     @ManyToMany
     @JoinTable(name = "participant_permission",
@@ -97,5 +111,9 @@ public class Participant {
         this.permissions = null;
         this.preferences = null;
         this.note = null;
+    }
+
+    public String getEnglishName() {
+        return firstName + ' ' + lastName;
     }
 }

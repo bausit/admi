@@ -35,6 +35,10 @@ public class ParticipantService implements UserDetailsService {
         return participantRepository.save(participant);
     }
 
+    public void save(Participant participant) {
+        participantRepository.save(participant);
+    }
+
     public Iterable<Participant> query(String query) {
         PredicatesBuilder builder = new PredicatesBuilder(Participant.class);
         QParticipant participant = QParticipant.participant;

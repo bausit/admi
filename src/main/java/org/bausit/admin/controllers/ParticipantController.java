@@ -2,10 +2,8 @@ package org.bausit.admin.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.bausit.admin.dtos.SecurityUser;
 import org.bausit.admin.models.Participant;
 import org.bausit.admin.services.ParticipantService;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/participants")
@@ -62,20 +59,20 @@ public class ParticipantController {
         csvWriter.close();
     }
 
-    @PostMapping("/preferences/{section}")
-    public boolean savePreference(@PathVariable String section,
-                                  @RequestBody Map preference,
-                                  Authentication authentication) {
-        SecurityUser user = (SecurityUser) authentication.getPrincipal();
-        log.info("saving {} preference: {}", section, preference);
-        return participantService.updatePreference(user.getParticipant(), section, preference);
+    @GetMapping("/{participantId}/note")
+    public String updateNote(@PathVariable long participantId) {
+        Participant participant = participantService.findById(participantId);
+
+        return participant.getNote();
     }
 
-    @GetMapping("/preferences/{section}")
-    public Map getPreference(@PathVariable String section,
-                             Authentication authentication) {
-        SecurityUser user = (SecurityUser) authentication.getPrincipal();
-        log.info("getting {} preference", section);
-        return participantService.getPreference(user.getParticipant(), section);
+    @PatchMapping("/{participantId}/note")
+    public void updateNote(@PathVariable long participantId, @RequestBody String note) {
+        Participant participant = participantService.findById(participantId);
+
+        participant.setNote(note);
+
+        participantService.save(participant);
     }
+
 }

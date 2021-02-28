@@ -55,6 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        String[] participantPatterns = {"/json/participants", "/json/participants/**", "/api/participants", "/api/participants/**"};
+        String[] eventPatterns = {"/json/events", "/json/events/**", "/api/events", "/api/events/**"};
+
         http
             .cors()
                 .configurationSource(corsConfigurationSource())
@@ -69,13 +72,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/token**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
 
-                //only users with role admin can access permissions
-                .antMatchers("/api/permissions**").hasAnyAuthority("super_admin")
-                .antMatchers("/json/permissions**").hasAnyAuthority("super_admin")
+                //only users with role super admin can access permissions
+                .antMatchers("/api/permissions/**", "/json/permissions**").hasAnyAuthority("super")
 
-                //only user with role admin can update member information
-                .antMatchers("/json/participants**", "POST", "PUT", "PATCH")
-                    .hasAnyAuthority("super_admin", "participant_admin")
+                .antMatchers(HttpMethod.GET, participantPatterns)
+                    .hasAnyAuthority("super", "participants_read", "participants_write")
+                .antMatchers(HttpMethod.POST, participantPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+                .antMatchers(HttpMethod.PUT, participantPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+                .antMatchers(HttpMethod.PATCH, participantPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+                .antMatchers("/api/participants/*/note")
+                    .hasAnyAuthority("super")
+
+                .antMatchers(HttpMethod.GET, eventPatterns)
+                    .hasAnyAuthority("super", "participants_read", "participants_write")
+                .antMatchers(HttpMethod.POST, eventPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+                .antMatchers(HttpMethod.PUT, eventPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+                .antMatchers(HttpMethod.PATCH, eventPatterns)
+                    .hasAnyAuthority("super", "participants_write")
+
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

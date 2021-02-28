@@ -30,16 +30,25 @@ public class DataLoader implements CommandLineRunner {
         Skill  chef = createSkill("Chef");
         Skill  engineering = createSkill("Engineering");
 
-        Permission permission = permissionRepository.save(Permission.builder()
-            .name("admin")
-            .build());
         Permission su = permissionRepository.save(Permission.builder()
-            .name("super_admin")
+            .name("super")
+            .build());
+        Permission participantRead = permissionRepository.save(Permission.builder()
+            .name("participants_read")
+            .build());
+        Permission participantWrite = permissionRepository.save(Permission.builder()
+            .name("participants_write")
+            .build());
+        Permission eventRead = permissionRepository.save(Permission.builder()
+            .name("events_read")
+            .build());
+        Permission eventWrite = permissionRepository.save(Permission.builder()
+            .name("events_write")
             .build());
 
         Set<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
-                .englishName(name)
+                .firstName(name)
                 .chineseName("名字")
                 .email(name + "@mail.com")
                 .phoneNumber("555-123-0000")
@@ -50,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
                 .type(Participant.Type.V)
                 .skills(List.of(chef,engineering))
                 .birthYear(2000).issueDate(Instant.now())
-                .permissions(name.equals("user") ? List.of(): List.of(permission, su))
+                .permissions(name.equals("user") ? List.of(): List.of(su))
                 .build())
             .map(participantService::create)
             .collect(Collectors.toSet());
