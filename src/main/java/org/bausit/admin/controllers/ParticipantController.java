@@ -59,13 +59,13 @@ public class ParticipantController {
         csvWriter.close();
     }
 
+    //note is a sensitive field, only super admins are allowed to view/edie
     @GetMapping("/{participantId}/note")
     public String updateNote(@PathVariable long participantId) {
         Participant participant = participantService.findById(participantId);
 
         return participant.getNote();
     }
-
     @PatchMapping("/{participantId}/note")
     public void updateNote(@PathVariable long participantId, @RequestBody String note) {
         Participant participant = participantService.findById(participantId);

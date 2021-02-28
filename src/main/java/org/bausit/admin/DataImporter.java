@@ -84,15 +84,14 @@ public class DataImporter implements CommandLineRunner {
                 String dateString = fields[idx];
                 String[] dateParts = dateString.split("\\/");
                 if(dateParts[2].length() == 2) {
-                    //prepend 20 if year has only 2 digits
+                    //prepend 19 if year has only 2 digits
                     dateString = dateParts[0] + "/" + dateParts[1] + "/" + "20" + dateParts[2];
                 }
                 Date date = sdf.parse(dateString);
                 Instant instant = date.toInstant();
-                log.info("{} - {} - {}", dateString, date, instant);
                 return instant;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.info("invalid date string: {}", fields[idx]);
             }
         }
 

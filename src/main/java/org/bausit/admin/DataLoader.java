@@ -49,6 +49,7 @@ public class DataLoader implements CommandLineRunner {
         Set<Participant> participants = Arrays.stream(new String[]{"Wayne", "Long", "BigDog", "danny", "lee", "user"})
             .map(name -> Participant.builder()
                 .firstName(name)
+                .lastName("Admin")
                 .chineseName("名字")
                 .email(name + "@mail.com")
                 .phoneNumber("555-123-0000")

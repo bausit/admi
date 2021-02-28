@@ -72,27 +72,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/token**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
 
-                //only users with role super admin can access permissions
+                //only users with role super admin can view/update permissions
                 .antMatchers("/api/permissions/**", "/json/permissions**").hasAnyAuthority("super")
 
                 .antMatchers(HttpMethod.GET, participantPatterns)
                     .hasAnyAuthority("super", "participants_read", "participants_write")
-                .antMatchers(HttpMethod.POST, participantPatterns)
+                .antMatchers(participantPatterns)
                     .hasAnyAuthority("super", "participants_write")
-                .antMatchers(HttpMethod.PUT, participantPatterns)
-                    .hasAnyAuthority("super", "participants_write")
-                .antMatchers(HttpMethod.PATCH, participantPatterns)
-                    .hasAnyAuthority("super", "participants_write")
+
+                //note is a sensitive field, only super admins are allowed to view/edie
                 .antMatchers("/api/participants/*/note")
                     .hasAnyAuthority("super")
 
                 .antMatchers(HttpMethod.GET, eventPatterns)
                     .hasAnyAuthority("super", "participants_read", "participants_write")
-                .antMatchers(HttpMethod.POST, eventPatterns)
-                    .hasAnyAuthority("super", "participants_write")
-                .antMatchers(HttpMethod.PUT, eventPatterns)
-                    .hasAnyAuthority("super", "participants_write")
-                .antMatchers(HttpMethod.PATCH, eventPatterns)
+                .antMatchers(eventPatterns)
                     .hasAnyAuthority("super", "participants_write")
 
                 .anyRequest().authenticated();
