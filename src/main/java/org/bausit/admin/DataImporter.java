@@ -85,7 +85,7 @@ public class DataImporter implements CommandLineRunner {
                 String[] dateParts = dateString.split("\\/");
                 if(dateParts[2].length() == 2) {
                     //prepend 19 if year has only 2 digits
-                    dateString = dateParts[0] + "/" + dateParts[1] + "/" + "20" + dateParts[2];
+                    dateString = dateParts[0] + "/" + dateParts[1] + "/" + "19" + dateParts[2];
                 }
                 Date date = sdf.parse(dateString);
                 Instant instant = date.toInstant();
