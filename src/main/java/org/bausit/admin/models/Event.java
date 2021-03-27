@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +46,14 @@ public class Event {
             .filter(team -> team.hasParticipant(participant))
             .findAny()
             .isPresent();
+    }
+
+    @JsonIgnore
+    public Set<Participant> getAllParticipants() {
+        Set<Participant> allParticipants = new HashSet<>();
+        allParticipants.addAll(getInvitedParticipants());
+        getTeams().forEach(team -> allParticipants.addAll(team.getParticipants()));
+        return allParticipants;
     }
 
     public void initViewMode() {

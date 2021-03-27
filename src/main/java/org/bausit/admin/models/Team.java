@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -47,6 +48,13 @@ public class Team {
             .filter(teamMember -> teamMember.getParticipant().getId() == participant.getId())
             .findAny()
             .isPresent();
+    }
+
+    @JsonIgnore
+    public Set<Participant> getParticipants() {
+        return members.stream()
+            .map(TeamMember::getParticipant)
+            .collect(Collectors.toSet());
     }
 
     public void initViewMode() {

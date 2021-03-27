@@ -107,10 +107,11 @@ public class Participant {
             .collect(Collectors.joining(", "));
     }
 
-    public void initViewMode() {
+    public Participant initViewMode() {
         this.permissions = null;
         this.preferences = null;
         this.note = null;
+        return this;
     }
 
     public String getEnglishName() {
