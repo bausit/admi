@@ -23,6 +23,9 @@ spring:
       basePath: /json
 server:
   port: 9090
+  error:
+    include-message: always
+    include-stacktrace: never
 
 security:
   jwt:

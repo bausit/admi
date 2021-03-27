@@ -24,10 +24,18 @@ public class EventController {
     }
 
     @GetMapping
-    public Iterable<Event> search(@RequestParam(required = false) String query) {
+    public Iterable<Event> search(@RequestParam(required = false) String query,
+                                  @RequestParam(required = false, defaultValue = "false") boolean slim) {
         log.info("search keywords: {}", query);
 
-        return eventService.query(query);
+        Iterable<Event> events = eventService.query(query);
+        if(slim) {
+            events.forEach(event -> event.setTeams(null)
+                .setInvitedParticipants(null)
+            );
+        }
+
+        return events;
     }
 
     @PostMapping("/invite/{eventId}")

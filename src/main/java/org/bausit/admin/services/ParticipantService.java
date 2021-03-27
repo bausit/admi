@@ -12,6 +12,8 @@ import org.bausit.admin.models.QParticipant;
 import org.bausit.admin.repositories.ParticipantRepository;
 import org.bausit.admin.search.PredicatesBuilder;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,7 +41,7 @@ public class ParticipantService implements UserDetailsService {
         participantRepository.save(participant);
     }
 
-    public Iterable<Participant> query(String query) {
+    public Iterable<Participant> query(String query, int startPage, int size) {
         PredicatesBuilder builder = new PredicatesBuilder(Participant.class);
         QParticipant participant = QParticipant.participant;
 
@@ -64,7 +66,8 @@ public class ParticipantService implements UserDetailsService {
             }
         }
         BooleanExpression exp = builder.build();
-        return participantRepository.findAll(exp);
+        Pageable pageable = PageRequest.of(startPage, size);
+        return participantRepository.findAll(exp, pageable);
     }
 
     public Participant findById(long participantId) {

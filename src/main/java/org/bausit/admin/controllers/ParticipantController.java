@@ -23,10 +23,12 @@ public class ParticipantController {
     private final ParticipantService participantService;
 
     @GetMapping
-    public Iterable<Participant> search(@RequestParam(required = false) String query) {
+    public Iterable<Participant> search(@RequestParam(required = false) String query,
+                                        @RequestParam(required = false, defaultValue = "0") int startPage,
+                                        @RequestParam(required = false, defaultValue = "10") int size) {
         log.info("search keywords: {}", query);
 
-        return participantService.query(query);
+        return participantService.query(query, startPage, size);
     }
 
     @GetMapping("/export")
@@ -42,7 +44,7 @@ public class ParticipantController {
         String headerValue = "attachment; filename=users_" + currentDateTime + ".csv";
         response.setHeader(headerKey, headerValue);
 
-        Iterable<Participant> participants = participantService.query(query);
+        Iterable<Participant> participants = participantService.query(query, 0, 10000);
 
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
         String[] csvHeader = {"English Name", "Chinese Name", "Email", "Phone Number", "Birth Year",
@@ -66,6 +68,7 @@ public class ParticipantController {
 
         return participant.getNote();
     }
+
     @PatchMapping("/{participantId}/note")
     public void updateNote(@PathVariable long participantId, @RequestBody String note) {
         Participant participant = participantService.findById(participantId);

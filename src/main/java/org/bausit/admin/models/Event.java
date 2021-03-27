@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

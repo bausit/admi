@@ -22,7 +22,7 @@ public class PermissionController {
 
     @GetMapping("/administrators")
     public List<Participant> getAdministrators(@RequestParam(required = false) String query) {
-        return StreamSupport.stream(participantService.query(query).spliterator(), false)
+        return StreamSupport.stream(participantService.query(query, 0, 1000).spliterator(), false)
             .filter(participant -> participant.getPermissions().size() > 0)
             .collect(Collectors.toList());
     }
