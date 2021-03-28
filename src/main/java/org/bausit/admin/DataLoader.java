@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,9 @@ public class DataLoader implements CommandLineRunner {
                 .email(name + "@mail.com")
                 .phoneNumber("555-123-0000")
                 .address("address for " + name)
-                .city("New York").zipcode("10001").password(passwordEncoder.encode("password"))
+                .city("New York")
+                .zipcode("10001")
+                .password(passwordEncoder.encode("password"))
                 .gender(Participant.Gender.M)
                 .state("NY")
                 .type(Participant.Type.V)
@@ -66,7 +69,7 @@ public class DataLoader implements CommandLineRunner {
             .collect(Collectors.toSet());
 
         Event event = Event.builder().name("清明法会Chinese Lunar New Year Blessing Ceremony")
-                .date(Instant.now())
+                .date(Instant.now().plus(Duration.ofDays(30)))
                 .location("the Temple")
                 //.invitedParticipants(participants)
                 .build();

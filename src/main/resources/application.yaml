@@ -23,10 +23,16 @@ spring:
       basePath: /json
 server:
   port: 9090
+  error:
+    include-message: always
+    include-stacktrace: never
 
 security:
   jwt:
     secret: baus-admin-@Ckd
     expirationSecond: 18000 # 5 hours
 
-logging.level.org.bausit.admin: DEBUG
+logging.level:
+  org.bausit.admin: DEBUG
+  org.springframework.web: DEBUG
+

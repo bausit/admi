@@ -11,7 +11,7 @@ public class TokenResponse {
     private String token;
     private String type = "Bearer";
     private Long id;
-    private String username;
+    private String name;
     private String email;
     private List<String> roles;
 }

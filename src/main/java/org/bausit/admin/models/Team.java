@@ -5,7 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -47,6 +49,33 @@ public class Team {
             .filter(teamMember -> teamMember.getParticipant().getId() == participant.getId())
             .findAny()
             .isPresent();
+    }
+
+    @JsonIgnore
+    public Set<Participant> getParticipants() {
+        return members.stream()
+            .map(TeamMember::getParticipant)
+            .collect(Collectors.toSet());
+    }
+
+    public Optional<TeamMember> addMember(Participant participant) {
+        if(!hasParticipant(participant)) {
+            TeamMember member = TeamMember.builder()
+                .participant(participant)
+                .type(TeamMember.Type.M)
+                .team(this)
+                .build();
+            getMembers().add(member);
+            return Optional.of(member);
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<TeamMember> getMember(long participantId) {
+        return getMembers().stream()
+            .filter(teamMember -> teamMember.getParticipant().getId() == participantId)
+            .findAny();
     }
 
     public void initViewMode() {

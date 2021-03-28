@@ -32,24 +32,27 @@ public class DataImporter implements CommandLineRunner {
         InputStream is = new ClassPathResource("/sample-data.csv").getInputStream();
         Scanner sc = new Scanner(is, "UTF-8");
 
+        String[] headers = sc.nextLine().split(",");
+        for(int i=0; i<headers.length; i++) {
+            log.info("{} - {}", i, headers[i]);
+        }
+
         //skip header
-        String line = sc.nextLine();
+        String line;
         while(sc.hasNextLine()) {
             line = sc.nextLine();
             String[] fields = line.split(",");
             log.info(line);
-            if(fields.length > 13)
-                log.info(fields[13]);
-            Participant.Status status = fields.length > 13 && StringUtils.hasText(fields[13]) ?
-                Participant.Status.valueOf(fields[13]) :
+            Participant.Status status = fields.length > 12 && StringUtils.hasText(fields[12]) ?
+                Participant.Status.valueOf(fields[12]) :
                 Participant.Status.A;
             Instant issueDate = parseDate(fields, 1);
-            String phoneNumber = fields.length > 12 ? fields[12] : "";
+            String phoneNumber = fields.length > 11 ? fields[11] : "";
             String email = fields.length > 14 ? fields[14] : "";
             Instant birthDate = parseDate(fields, 15);
-            String remark = fields.length > 16 ? fields[16] : "";
-            String note = fields.length > 17 ? fields[17] : "";
-            String emergencyContact = fields.length > 18 ? fields[18] : "";
+            String remark = fields.length > 17 ? fields[17] : "";
+            String note = fields.length > 18 ? fields[18] : "";
+            String emergencyContact = fields.length > 19 ? fields[19] : "";
             int birthYear = birthDate != null ? Integer.parseInt(yearFormatter.format(birthDate)) : 0;
 
             Participant p = Participant.builder()
@@ -64,7 +67,7 @@ public class DataImporter implements CommandLineRunner {
                 .address(fields[7])
                 .city(fields[8])
                 .state(fields[9])
-                .zipcode(fields[11])
+                .zipcode(fields[10])
                 .phoneNumber(phoneNumber)
                 .status(status)
                 .email(email)
@@ -84,8 +87,12 @@ public class DataImporter implements CommandLineRunner {
                 String dateString = fields[idx];
                 String[] dateParts = dateString.split("\\/");
                 if(dateParts[2].length() == 2) {
+                    int year = Integer.parseInt(dateParts[2]);
+                    int yearPrefix = 19;
+                    if(year < 30)
+                        yearPrefix = 20;
                     //prepend 19 if year has only 2 digits
-                    dateString = dateParts[0] + "/" + dateParts[1] + "/" + "20" + dateParts[2];
+                    dateString = dateParts[0] + "/" + dateParts[1] + "/" + yearPrefix + dateParts[2];
                 }
                 Date date = sdf.parse(dateString);
                 Instant instant = date.toInstant();
