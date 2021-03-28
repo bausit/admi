@@ -1,11 +1,14 @@
 package org.bausit.admin.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import net.minidev.json.annotate.JsonIgnore;
+import lombok.extern.log4j.Log4j2;
+
+
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -19,7 +22,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Log4j2
 public class Event {
+    public static final String DEFAULT_TEAM_NAME = "DEFAULT";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
@@ -62,5 +68,21 @@ public class Event {
 
         if(getInvitedParticipants() != null)
             getInvitedParticipants().forEach(participant -> participant.initViewMode());
+    }
+
+    @JsonIgnore
+    public Team getDefaultTeam() {
+        return getTeams().stream()
+            .filter(team -> DEFAULT_TEAM_NAME.equals(team.getName()))
+            .findAny()
+            .orElseGet(() -> {
+                Team team =Team.builder()
+                        .name(DEFAULT_TEAM_NAME)
+                        .event(this)
+                        .members(new HashSet<>())
+                        .build();
+                getTeams().add(team);
+                return team;
+            });
     }
 }

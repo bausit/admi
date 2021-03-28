@@ -2,6 +2,7 @@ package org.bausit.admin.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.bausit.admin.exceptions.EntityNotFoundException;
 import org.bausit.admin.models.Event;
 import org.bausit.admin.models.Participant;
 import org.bausit.admin.models.Team;
@@ -48,12 +49,24 @@ public class EventController {
         eventService.invite(event, participants);
     }
 
-    @PostMapping("/assign/{eventId}/{teamId}")
+    @PostMapping("/{eventId}/{teamId}")
     public void assignTeamMember(@PathVariable long eventId,
-                              @PathVariable long teamId,
-                              @RequestBody List<Long> participants) {
+                                 @PathVariable long teamId,
+                                 @RequestBody List<Long> participants) {
         Event event = eventService.findById(eventId);
         Team team = eventService.findTeam(event, teamId);
         eventService.assignTeamMember(event, team, participants);
+    }
+
+    @DeleteMapping ("/{eventId}/{teamId}/{participantId}")
+    public void removeTeamMember(@PathVariable long eventId,
+                                 @PathVariable long teamId,
+                                 @PathVariable long participantId) {
+        log.debug("deleting");
+        Event event = eventService.findById(eventId);
+        Team team = eventService.findTeam(event, teamId);
+        eventService.removeTeamMember(event, team, participantId)
+            .orElseThrow(() -> new EntityNotFoundException("participant id: " + participantId +
+                " is not in team: " + team.getName()));
     }
 }

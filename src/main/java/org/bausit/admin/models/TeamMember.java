@@ -14,9 +14,17 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamMember {
+
+    public enum Type {
+        L, A, M
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
+
+    @Enumerated(EnumType.STRING)
+    Type type = Type.M;
 
     @ManyToOne
     @JoinColumn(name = "participant_id")
