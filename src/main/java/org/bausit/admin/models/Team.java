@@ -84,4 +84,8 @@ public class Team {
         if(getLeader() != null)
             this.getLeader().initViewMode();
     }
+
+    public boolean isDefault() {
+        return Event.DEFAULT_TEAM_NAME.equals(getName());
+    }
 }

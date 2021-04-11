@@ -92,4 +92,22 @@ public class EventService {
                 });
             });
     }
+
+    public void delete(long eventId) {
+        Event event = this.findById(eventId);
+        log.info("deleting event: {}", event.getName());
+
+        event.getTeams()
+            .stream()
+            .forEach(team -> {
+                team.getMembers().stream()
+                    .forEach(teamMember -> teamMemberRepository.delete(teamMember));
+                teamRepository.delete(team);
+            });
+        eventRepository.delete(event);
+    }
+
+    public void deleteTeam(long teamId) {
+        teamRepository.deleteById(teamId);
+    }
 }
