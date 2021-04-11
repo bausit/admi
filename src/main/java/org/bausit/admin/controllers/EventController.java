@@ -7,8 +7,12 @@ import org.bausit.admin.models.Event;
 import org.bausit.admin.models.Participant;
 import org.bausit.admin.models.Team;
 import org.bausit.admin.services.EventService;
+import org.bausit.admin.services.PdfService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +22,7 @@ import java.util.Set;
 @Log4j2
 public class EventController {
     private final EventService eventService;
+    private final PdfService pdfService;
 
     @GetMapping("/{eventId}")
     public Event getEvent(@PathVariable long eventId) {
@@ -47,6 +52,33 @@ public class EventController {
     public void invite(@PathVariable long eventId, @RequestBody List<Long> participants) {
         Event event = eventService.findById(eventId);
         eventService.invite(event, participants);
+    }
+
+    @DeleteMapping("/{eventId}")
+    public void delete(@PathVariable long eventId) {
+        eventService.delete(eventId);
+    }
+
+    @DeleteMapping ("/teams/{teamId}")
+    public void deleteTeam(@PathVariable long teamId) {
+        eventService.deleteTeam(teamId);
+    }
+
+    @GetMapping("/export/{eventId}")
+    public void export(@PathVariable long eventId,
+                       HttpServletResponse response) throws IOException {
+        Event event = eventService.findById(eventId);
+
+        response.setHeader("Expires", "0");
+        response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+        response.setHeader("Pragma", "public");
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + event.getId() + ".pdf" + "\"");
+
+        OutputStream os = response.getOutputStream();
+        pdfService.export(event, os);
+        os.flush();
+        os.close();
     }
 
     @PostMapping("/{eventId}/{teamId}")
