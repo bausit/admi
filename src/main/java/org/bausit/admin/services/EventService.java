@@ -55,7 +55,7 @@ public class EventService {
             .orElseThrow(() -> new EntityNotFoundException("Unable to find events with id: " + eventId));
     }
 
-    public Participant checkin(Event event, Participant participant, Instant checkoutDate) {
+    public Checkin checkin(Event event, Participant participant, Instant checkoutDate) {
         //check if participant was invited
         boolean invited = event.getAllParticipants()
             .stream()
@@ -72,9 +72,7 @@ public class EventService {
             .checkoutDate(checkoutDate)
             .build();
 
-        checkinRepository.save(checkin);
-
-        return participant;
+        return checkinRepository.save(checkin);
     }
 
     public List<Event> findTodayEvent() {

@@ -2,7 +2,7 @@ package org.bausit.admin.filters;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.bausit.admin.services.JwtService;
+import org.bausit.admin.services.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @Log4j2
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    private final TokenService tokenService;
 
     private final UserDetailsService userDetailsService;
 
@@ -31,8 +31,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtService.validateToken(jwt)) {
-                String username = jwtService.getUserNameFromToken(jwt);
+            if (jwt != null && tokenService.validateToken(jwt)) {
+                String username = tokenService.getUserNameFromToken(jwt);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

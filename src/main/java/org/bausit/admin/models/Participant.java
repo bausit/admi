@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bausit.admin.dtos.Profile;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -116,5 +117,31 @@ public class Participant {
 
     public String getEnglishName() {
         return firstName + ' ' + lastName;
+    }
+
+    public Profile toProfile() {
+        return Profile.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .chineseName(chineseName)
+            .email(email)
+            .phoneNumber(phoneNumber)
+            .address(address)
+            .city(city)
+            .state(state)
+            .zipcode(zipcode)
+            .build();
+    }
+
+    public void fromProfile(Profile profile) {
+        firstName = profile.getFirstName();
+        lastName = profile.getLastName();
+        chineseName = profile.getChineseName();
+        email = profile.getEmail();
+        phoneNumber = profile.getPhoneNumber();
+        address = profile.getAddress();
+        city = profile.getCity();
+        state = profile.getState();
+        zipcode = profile.getZipcode();
     }
 }

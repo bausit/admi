@@ -38,7 +38,7 @@ public class ParticipantService implements UserDetailsService {
     }
 
     public Participant findByEmailOrPhone(String emailOrPhone) {
-        return participantRepository.findByEmailOrPhoneNumber(emailOrPhone, emailOrPhone)
+        return participantRepository.findByEmailOrPhoneNumber(emailOrPhone.toLowerCase())
             .orElseThrow(() -> new EntityNotFoundException("Unable to find participant with " + emailOrPhone));
     }
 

@@ -30,5 +30,10 @@ public interface ParticipantRepository extends CrudRepository<Participant, Long>
         bindings.excluding(member.password);
     }
 
-    Optional<Participant> findByEmailOrPhoneNumber(String emailOrPhone, String emailPhone);
+    @Query("""
+        SELECT p 
+        FROM Participant p 
+        WHERE lower(p.email) = ?1 OR lower(p.phoneNumber) = ?1
+    """)
+    Optional<Participant> findByEmailOrPhoneNumber(String emailOrPhone);
 }

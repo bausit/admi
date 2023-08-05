@@ -3,36 +3,47 @@ package org.bausit.admin.services;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.dtos.SecurityUser;
+import org.bausit.admin.dtos.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class JwtService {
+public class TokenService {
     private final String jwtSecret;
 
     private final int jwtExpirationSecond;
     
-    public JwtService(@Value("${security.jwt.secret}") String jwtSecret,
-                      @Value("${security.jwt.expirationSecond}") int jwtExpirationSecond) {
+    public TokenService(@Value("${security.jwt.secret}") String jwtSecret,
+                        @Value("${security.jwt.expirationSecond}") int jwtExpirationSecond) {
         this.jwtSecret = jwtSecret;
         this.jwtExpirationSecond = jwtExpirationSecond;
     }
 
-    public String generateToken(Authentication authentication) {
-
-        SecurityUser userPrincipal = (SecurityUser) authentication.getPrincipal();
-
-        return Jwts.builder()
-            .setSubject((userPrincipal.getUsername()))
+    public TokenResponse generateToken(SecurityUser user) {
+        var jwt = Jwts.builder()
+            .setSubject((user.getUsername()))
             .setIssuedAt(new Date())
             .setExpiration(Date.from(Instant.now().plusSeconds(jwtExpirationSecond)))
             .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact();
+
+        List<String> roles = user.getAuthorities().stream()
+            .map(item -> item.getAuthority())
+            .collect(Collectors.toList());
+
+        return TokenResponse.builder()
+            .token(jwt)
+            .id(user.getParticipant().getId())
+            .name(user.getParticipant().getEnglishName())
+            .email(user.getUsername())
+            .roles(roles)
+            .build();
     }
 
     public String getUserNameFromToken(String token) {

@@ -3,6 +3,8 @@ package org.bausit.admin.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.dtos.CheckinRequest;
+import org.bausit.admin.dtos.SecurityUser;
+import org.bausit.admin.dtos.TokenResponse;
 import org.bausit.admin.exceptions.EntityNotFoundException;
 import org.bausit.admin.exceptions.InvalidRequestException;
 import org.bausit.admin.models.Event;
@@ -11,6 +13,8 @@ import org.bausit.admin.models.Team;
 import org.bausit.admin.services.EventService;
 import org.bausit.admin.services.ParticipantService;
 import org.bausit.admin.services.PdfService;
+import org.bausit.admin.services.TokenService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,29 +34,34 @@ public class EventController {
     private final EventService eventService;
     private final PdfService pdfService;
     private final ParticipantService participantService;
+    private final TokenService tokenService;
 
     @GetMapping("/today")
-    public List<Event> getTodayEvent() {
+    public Map<Long, String> getTodayEvents() {
         return eventService.findTodayEvent()
             .stream()
-            .map(event -> {
-                event.initViewMode();
-                return event;
-            })
-            .collect(Collectors.toList());
+            .collect(Collectors.toMap(Event::getId, Event::getName));
     }
 
     @PostMapping("/{eventId}/checkin")
-    public Participant checkin(@PathVariable long eventId, @RequestBody CheckinRequest request) {
+    public TokenResponse checkin(@PathVariable long eventId, @RequestBody CheckinRequest request) {
         Event event = eventService.findById(eventId);
 
         try {
             Participant participant = participantService.findByEmailOrPhone(request.getEmailOrPhone());
+            log.info("Found participant: {}", participant.getId());
+            var token = tokenService.generateToken(new SecurityUser(participant));
 
             Instant checkoutDate = request.getCheckoutDate();
-            return eventService.checkin(event, participant, checkoutDate);
+            try {
+                eventService.checkin(event, participant, checkoutDate);
+            } catch (DataIntegrityViolationException e) {
+                log.info("Already checkin to this event");
+            }
+
+            return token;
         } catch (Exception e) {
-            log.info("error: " + e.getMessage());
+            log.info("error: " + e.getMessage(), e);
             throw new InvalidRequestException(e.getMessage(), e);
         }
     }
