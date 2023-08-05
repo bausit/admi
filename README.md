@@ -31,13 +31,16 @@ admins: BigDog@mail.com, danny@mail.com, Long@mail.com are invited and able to c
 
 
 1. Getting today's event
+```
    curl --location --request GET 'http://107.172.60.46:9090/api/events/today'
    {
    "26": "清明法会Chinese Lunar New Year Blessing Ceremony"
    }
+```
 
 
 2. checkin to the event, repeated checkin attempts after the first try will be ignored, but would still return session token
+```
    curl --location --request POST 'http://107.172.60.46:9090/api/events/26/checkin' \
    --header 'Content-Type: application/json' \
    --data-raw '{
@@ -45,8 +48,10 @@ admins: BigDog@mail.com, danny@mail.com, Long@mail.com are invited and able to c
    "date": "2023-08-06",
    "hour": 8
    }'
+```
 
 Response
+```json
 {
 "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYW5ueUBtYWlsLmNvbSIsImlhdCI6MTY5MTIxMjI2MiwiZXhwIjoxNjkxMjMwMjYyfQ.0semiVuf8NrjcrKpBQBHBotkITsodvcQMLt44hs7thegtrFD0UDM8-0v82p10csXCx4hVzShQj5nq5Q9KY4Xbw",
 "type": "Bearer",
@@ -57,12 +62,16 @@ Response
 "super"
 ]
 }
+```
 
 3. Fetch user profile
+```
    curl --location --request GET 'http://107.172.60.46:9090/api/profile' \
    --header 'Authorization: Bearer {{user token from 2)}}'
+```
 
 Response
+```json
 {
 "chineseName": "名字",
 "firstName": "danny",
@@ -74,8 +83,10 @@ Response
 "state": "NY",
 "zipcode": "10011"
 }
+```
 
 4. Update profile
+```
    curl --location --request POST 'http://107.172.60.46:9090/api/profile' \
    --header 'Authorization: Bearer {{user token from 2)}}'
    --header 'Content-Type: application/json' \
@@ -90,6 +101,8 @@ Response
    "state": "NY",
    "zipcode": "10011"
    }'
+
+```
 
 ### Request tokens
 `
