@@ -11,13 +11,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ParticipantRepository extends CrudRepository<Participant, Long>,
     QuerydslPredicateExecutor<Participant>,
     QuerydslBinderCustomizer<QParticipant> {
 
-    List<Participant> findByEmail(String emaiil);
+    List<Participant> findByEmail(String email);
 
     @Query("select p from Participant p join p.skills s where s.Id = :skillId")
     List<Participant> findBySkillId(long skillId);
@@ -28,4 +29,6 @@ public interface ParticipantRepository extends CrudRepository<Participant, Long>
             .first((StringPath path, String value) -> path.containsIgnoreCase(value));
         bindings.excluding(member.password);
     }
+
+    Optional<Participant> findByEmailOrPhoneNumber(String emailOrPhone, String emailPhone);
 }

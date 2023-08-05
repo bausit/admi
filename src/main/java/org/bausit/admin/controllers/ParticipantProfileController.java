@@ -43,4 +43,9 @@ public class ParticipantProfileController {
         participant.setPassword(encodedPassword);
         participantService.save(participant);
     }
+
+    @PostMapping
+    public void updateProfile(@RequestBody Participant participant) {
+
+    }
 }

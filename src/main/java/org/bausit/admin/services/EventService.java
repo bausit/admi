@@ -4,7 +4,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bausit.admin.exceptions.EntityNotFoundException;
+import org.bausit.admin.exceptions.InvalidRequestException;
 import org.bausit.admin.models.*;
+import org.bausit.admin.repositories.CheckinRepository;
 import org.bausit.admin.repositories.EventRepository;
 import org.bausit.admin.repositories.TeamMemberRepository;
 import org.bausit.admin.repositories.TeamRepository;
@@ -13,6 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -25,6 +32,7 @@ public class EventService {
     private final ParticipantService participantService;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
+    private final CheckinRepository checkinRepository;
 
     public Iterable<Event> query(String query) {
         PredicatesBuilder builder = new PredicatesBuilder(Event.class);
@@ -45,6 +53,35 @@ public class EventService {
     public Event findById(long eventId) {
         return eventRepository.findById(eventId)
             .orElseThrow(() -> new EntityNotFoundException("Unable to find events with id: " + eventId));
+    }
+
+    public Participant checkin(Event event, Participant participant, Instant checkoutDate) {
+        //check if participant was invited
+        boolean invited = event.getAllParticipants()
+            .stream()
+            .anyMatch(p -> p.getId() == participant.getId());
+
+        if (!invited) {
+            throw new InvalidRequestException("Participant was not invited");
+        }
+
+        Checkin checkin = Checkin.builder()
+            .participant(participant)
+            .event(event)
+            .checkinDate(Instant.now())
+            .checkoutDate(checkoutDate)
+            .build();
+
+        checkinRepository.save(checkin);
+
+        return participant;
+    }
+
+    public List<Event> findTodayEvent() {
+        Instant start = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).toInstant(ZoneOffset.UTC);
+        Instant end = start.plus(Duration.ofDays(2));
+        log.info("Find events between {} and {}", start, end);
+        return eventRepository.findByDateBetween(start, end);
     }
 
     @Transactional

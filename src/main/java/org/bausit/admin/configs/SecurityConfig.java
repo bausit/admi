@@ -69,7 +69,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-                .antMatchers("/api/token**").permitAll()
+                .antMatchers("/api/token**", "/actuator/health").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
 
                 //only users with role super admin can view/update permissions

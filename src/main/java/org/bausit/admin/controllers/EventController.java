@@ -2,19 +2,24 @@ package org.bausit.admin.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.bausit.admin.dtos.CheckinRequest;
 import org.bausit.admin.exceptions.EntityNotFoundException;
+import org.bausit.admin.exceptions.InvalidRequestException;
 import org.bausit.admin.models.Event;
 import org.bausit.admin.models.Participant;
 import org.bausit.admin.models.Team;
 import org.bausit.admin.services.EventService;
+import org.bausit.admin.services.ParticipantService;
 import org.bausit.admin.services.PdfService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/events")
@@ -23,6 +28,33 @@ import java.util.Set;
 public class EventController {
     private final EventService eventService;
     private final PdfService pdfService;
+    private final ParticipantService participantService;
+
+    @GetMapping("/today")
+    public List<Event> getTodayEvent() {
+        return eventService.findTodayEvent()
+            .stream()
+            .map(event -> {
+                event.initViewMode();
+                return event;
+            })
+            .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{eventId}/checkin")
+    public Participant checkin(@PathVariable long eventId, @RequestBody CheckinRequest request) {
+        Event event = eventService.findById(eventId);
+
+        try {
+            Participant participant = participantService.findByEmailOrPhone(request.getEmailOrPhone());
+
+            Instant checkoutDate = request.getCheckoutDate();
+            return eventService.checkin(event, participant, checkoutDate);
+        } catch (Exception e) {
+            log.info("error: " + e.getMessage());
+            throw new InvalidRequestException(e.getMessage(), e);
+        }
+    }
 
     @GetMapping("/{eventId}")
     public Event getEvent(@PathVariable long eventId) {
