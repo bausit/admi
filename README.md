@@ -104,6 +104,115 @@ Response
 
 ```
 
+5. List checkins for an event
+```
+curl --location --request POST 'http://107.172.60.46:9090/api/events/26' \
+   --header 'Authorization: Bearer {{admin user token)}}'
+```
+
+Response
+```json
+{
+  "name": "清明法会Chinese Lunar New Year Blessing Ceremony",
+  "location": "the Temple",
+  "date": "2023-08-08T02:15:20.565263Z",
+  "teams": [
+   
+  ],
+  "checkins": [
+    {
+      "id": 0,
+      "participant": {
+        "memberNumber": 0,
+        "chineseName": "名字",
+        "firstName": "danny",
+        "lastName": "Admin",
+        "issueDate": "2023-08-08T02:15:20.386705Z",
+        "type": "V",
+        "email": "danny@mail.com",
+        "phoneNumber": "555-123-0000",
+        "birthYear": 2000,
+        "birthDate": null,
+        "gender": "M",
+        "status": null,
+        "refuge": false,
+        "address": "address for danny",
+        "city": "New York",
+        "state": "NY",
+        "zipcode": "10001",
+        "emergencyContact": null,
+        "skills": [
+          {
+            "name": "Chef",
+            "description": "Chef",
+            "id": 13
+          },
+          {
+            "name": "Engineering",
+            "description": "Engineering",
+            "id": 14
+          }
+        ],
+        "note": null,
+        "remark": null,
+        "permissions": null,
+        "preferences": null,
+        "id": 23,
+        "englishName": "danny Admin",
+        "skillsAsString": "Chef, Engineering",
+        "permissionsAsString": ""
+      },
+      "event": null,
+      "checkinDate": "2023-08-08T02:18:44.103722Z",
+      "checkoutDate": "2023-08-06T12:00:00Z"
+    }
+  ],
+  "invitedParticipants": [
+    {
+      "memberNumber": 0,
+      "chineseName": "名字",
+      "firstName": "Long",
+      "lastName": "Admin",
+      "issueDate": "2023-08-08T02:15:20.209352Z",
+      "type": "V",
+      "email": "long@mail.com",
+      "phoneNumber": "555-123-0000",
+      "birthYear": 2000,
+      "birthDate": null,
+      "gender": "M",
+      "status": null,
+      "refuge": false,
+      "address": "address for Long",
+      "city": "New York",
+      "state": "NY",
+      "zipcode": "10001",
+      "emergencyContact": null,
+      "skills": [
+        {
+          "name": "Chef",
+          "description": "Chef",
+          "id": 13
+        },
+        {
+          "name": "Engineering",
+          "description": "Engineering",
+          "id": 14
+        }
+      ],
+      "note": null,
+      "remark": null,
+      "permissions": null,
+      "preferences": null,
+      "id": 21,
+      "englishName": "Long Admin",
+      "skillsAsString": "Chef, Engineering",
+      "permissionsAsString": ""
+    }
+  ],
+  "id": 26
+}
+```
+
 ### Request tokens
 `
 curl --location --request POST 'http://localhost:9090/api/token' \

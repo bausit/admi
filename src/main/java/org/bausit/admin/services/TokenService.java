@@ -7,6 +7,8 @@ import org.bausit.admin.dtos.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -16,46 +18,56 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TokenService {
     private final String jwtSecret;
+    private final KeyPair keyPair;
 
     private final int jwtExpirationSecond;
     
     public TokenService(@Value("${security.jwt.secret}") String jwtSecret,
-                        @Value("${security.jwt.expirationSecond}") int jwtExpirationSecond) {
+                        @Value("${security.jwt.expirationSecond}") int jwtExpirationSecond) throws Exception {
         this.jwtSecret = jwtSecret;
         this.jwtExpirationSecond = jwtExpirationSecond;
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        this.keyPair = keyPairGenerator.generateKeyPair();
     }
 
     public TokenResponse generateToken(SecurityUser user) {
-        var jwt = Jwts.builder()
-            .setSubject((user.getUsername()))
-            .setIssuedAt(new Date())
-            .setExpiration(Date.from(Instant.now().plusSeconds(jwtExpirationSecond)))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
-            .compact();
-
         List<String> roles = user.getAuthorities().stream()
             .map(item -> item.getAuthority())
             .collect(Collectors.toList());
+        var jwt = Jwts.builder()
+            .setSubject((user.getUsername()))
+            .setIssuer("baus.org")
+            .claim("roles", roles)
+            .claim("id", user.getParticipant().getId())
+            .claim("name", user.getParticipant().getEnglishName())
+            .claim("email", user.getUsername())
+            .setIssuedAt(new Date())
+            .setExpiration(Date.from(Instant.now().plusSeconds(jwtExpirationSecond)))
+            .signWith(SignatureAlgorithm.RS512, keyPair.getPrivate())
+            .compact();
+
+        log.info("Created user token: {}", jwt);
 
         return TokenResponse.builder()
             .token(jwt)
-            .id(user.getParticipant().getId())
-            .name(user.getParticipant().getEnglishName())
-            .email(user.getUsername())
-            .roles(roles)
             .build();
     }
 
     public String getUserNameFromToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+            .setSigningKey(keyPair.getPrivate())
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
     }
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser()
+                .setSigningKey(keyPair.getPrivate())
+                .parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException e) {
-            log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -67,5 +79,9 @@ public class TokenService {
         }
 
         return false;
+    }
+
+    public String getPublicKey() {
+        return keyPair.getPublic().toString();
     }
 }
