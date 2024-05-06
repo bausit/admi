@@ -37,6 +37,9 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<Team> teams;
 
+    @OneToMany(mappedBy = "event")
+    private List<Checkin> checkins;
+
     @ManyToMany
     @JoinTable(name = "event_participant",
         inverseJoinColumns = @JoinColumn(name="participant_id", referencedColumnName = "id"),
@@ -68,6 +71,9 @@ public class Event {
 
         if(getInvitedParticipants() != null)
             getInvitedParticipants().forEach(participant -> participant.initViewMode());
+
+        if(getCheckins() != null)
+            getCheckins().forEach(checkin -> checkin.initViewMode());
     }
 
     @JsonIgnore

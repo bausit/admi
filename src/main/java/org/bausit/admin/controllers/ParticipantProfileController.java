@@ -2,6 +2,7 @@ package org.bausit.admin.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.bausit.admin.dtos.Profile;
 import org.bausit.admin.dtos.SecurityUser;
 import org.bausit.admin.dtos.UpdatePasswordRequest;
 import org.bausit.admin.models.Participant;
@@ -9,10 +10,7 @@ import org.bausit.admin.services.ParticipantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -42,5 +40,20 @@ public class ParticipantProfileController {
         String encodedPassword = passwordEncoder.encode(request.getNewPassword());
         participant.setPassword(encodedPassword);
         participantService.save(participant);
+    }
+
+    @GetMapping
+    public Profile get(Authentication authentication) {
+        var securityUser = (SecurityUser) authentication.getPrincipal();
+        return securityUser.getParticipant().toProfile();
+    }
+
+    @PostMapping
+    public Profile save(Authentication authentication, @RequestBody Profile profile) {
+        var securityUser = (SecurityUser) authentication.getPrincipal();
+        var participant = participantService.findById(securityUser.getParticipant().getId());
+        participant.fromProfile(profile);
+        participantService.save(participant);
+        return profile;
     }
 }

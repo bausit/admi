@@ -21,6 +21,14 @@ spring:
   data:
     rest:
       basePath: /json
+
+
+springdoc:
+  swagger-ui:
+    tryItOutEnabled: true
+  api-docs:
+    enabled: true
+
 server:
   port: 9090
   error:
